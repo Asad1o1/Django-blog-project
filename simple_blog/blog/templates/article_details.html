@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{{ post.title }}
+{% endblock title %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+
+<small>
+    By: {{ post.author.first_name }} {{ post.author.last_name}} <br> Published: {{ post.published }}
+</small>
+<br>
+
+{% if user.id == post.author.id %}
+
+<a href="{% url 'edit_post' post.pk %}" class="btn btn-outline-info btn-sm">Edit</a>
+<a href="{% url 'delete_post' post.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+
+{% endif %}
+
+<br>
+<hr>
+
+<div class="card mb-3">
+    {% if post.header_image %}
+    <img src="{{ post.header_image.url }}" class="img-fluid rounded-start" alt="Cant find image">
+    {% elif post.category == "coding" %}
+    <img src="{% static 'blog/images/default-coding.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% elif post.category == "entertainment" %}
+    <img src="{% static 'blog/images/default-entertainment.png' %}" class="img-fluid rounded-start" alt="...">
+    {% elif post.category == "sports" %}
+    <img src="{% static 'blog/images/default-sports.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% elif post.category == "hiking" %}
+    <img src="{% static 'blog/images/default-hiking.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% elif post.category == "Motorcycles" %}
+    <img src="{% static 'blog/images/default-motorcycles.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% elif post.category == "Coding Tutorial" %}
+    <img src="{% static 'blog/images/default-tutorial.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% else %}
+    <img src="{% static 'blog/images/default-blog-card.jpg' %}" class="img-fluid rounded-start" alt="...">
+    {% endif %}
+    <div class="card-body">
+        <p class="card-text text-muted">
+            {{ post.body | safe }}
+        </p>
+    </div>
+</div>
+
+
+<form method="POSt" action="{% url 'like_post' post.pk %}">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+    {% if liked %}
+    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-outline-danger btn-sm">Unlike!!</button>
+    {% else %}
+    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-outline-primary btn-sm">Like!</button>
+    {% endif %}
+    {{ total_like }} Likes.
+    {% endif %}
+</form>
+
+<br>
+
+<h4>Comments.</h4>
+{% if user.is_authenticated %}
+{% if not post.comments.all %}
+No Comments To Display <a href="{% url 'add_comment' post.pk %}">Add Comment</a>
+{% else %}
+{% for comment in post.comments.all %}
+<div class="card mb-3" style="max-width: 640px;">
+    <div class="row g-0">
+        <div class="col-md-2">
+            <img src="{% static 'blog/images/user-default.png' %}" class="img-fluid rounded-start" width="150"
+                height="150" alt="...">
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <p class="card-title"> <strong>{{ comment.name}}</strong> <small class="text-muted">
+                        {{comment.date_created }}</small></p>
+                <p class="card-text">{{ comment.body }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+
+<a href="{% url 'add_comment' post.pk %}">Add Comment</a>
+
+<hr>
+
+<h5>Author Info.</h5>
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-2">
+            {% if post.author.userprofile.profile_pic %}
+            <img src="{{ post.author.userprofile.profile_pic.url }}" width="150" height="150"
+                class="img-fluid rounded-start" alt="Image Not Found">
+            {% else %}
+            <img src="{% static 'blog/images/user-default.png' %}" width="150" height="150"
+                class="img-fluid rounded-start" alt="Image Not Found">
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url 'view_profile' post.author.userprofile.id %}">{{ post.author.first_name }}
+                        {{post.author.last_name}}</a>
+                </h5>
+                <p class="card-text"><small class="text-muted">
+
+                        {% if post.author.userprofile.linkedin_url %}
+                        <a href="{{ post.author.userprofile.linkedin_url }}">Linkedin</a>
+                        {% endif %}
+
+                        {% if post.author.userprofile.instagram_url %}
+                        | <a href="{{ post.author.userprofile.instagram_url }}">Instagram</a>
+                        {% endif %}
+
+                        {% if post.author.userprofile.twitter_url %}
+                        | <a href="{{ post.author.userprofile.twitter_url }}">Twitter</a>
+                        {% endif %}
+
+                        {% if post.author.userprofile.github_url %}
+                        | <a href="{{ post.author.userprofile.github_url }}">Github</a>
+                        {% endif %}
+
+                    </small></p>
+                <p class="card-text">{{ post.author.userprofile.bio }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br><br>
+
+{% endblock content %}

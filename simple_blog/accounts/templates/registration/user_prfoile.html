@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+
+<div class="container rounded bg-white mt-5 mb-5 border border-2">
+    <div class="row">
+        <div class="col-md-5 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                {% if page_user.profile_pic %}
+                <img class="rounded-circle mt-5" width="150px" height="150px" src="{{ page_user.profile_pic.url }}"
+                    alt="Image Not Found">
+                {% else %}
+                <img class="rounded-circle mt-5" width="125px" src="{% static 'blog/images/user-default.png' %}"
+                    alt="Image Not Found">
+                {% endif %}
+                <span class="font-weight-bold">
+                    {{ page_user.user.username }}
+                </span>
+                <span class="text-black-50">
+                    {{ page_user.user.email }}
+                </span>
+                <span class="text-black-50">
+                    {{ page_user.bio }}
+                </span>
+                <br>
+
+                <div class="wrapper">
+
+                    {% if page_user.linkedin_url %}
+                    <a class="btn btn-primary" style="background-color: #0082ca;" href="{{ page_user.linkedin_url }}"
+                        role="button"><i class="fab fa-linkedin-in"></i></a>
+                    {% endif %}
+
+
+                    {% if page_user.instagram_url %}
+                    <a class="btn btn-primary" style="background-color: #e95950;" href="{{ page_user.instagram_url }}"
+                        role="button"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+
+
+                    {% if page_user.twitter_url %}
+                    <a class="btn btn-primary" style="background-color: #55acee;" href="{{ page_user.twitter_url }}"
+                        role="button"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+
+
+                    {% if page_user.github_url %}
+                    <a class="btn btn-primary" style="background-color: #333333;" href="{{ page_user.github_url }}"
+                        role="button"><i class="fab fa-github"></i></a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right"></h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">First Name</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.user.first_name }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Last Name</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.user.last_name }}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label class="labels">Mobile Number</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.mobile_number }}">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Country</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.country }}">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">State</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.state }}">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">City</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.city }}">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Postcode</label>
+                        <input type="text" class="form-control" disabled value="{{ page_user.postal_code }}">
+                    </div>
+                </div>
+                
+                {% if user.id == userprofile.id %}
+                <div class="mt-5 text-center">
+                    <a href="{% url 'edit_profile_page' user.userprofile.id %}" class="btn btn-primary">Edit Profile</a>
+                    <a href="{% url 'edit_profile' %}" class="btn btn-secondary" style="background-color: gray;">Edit Settings</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<h3>Your not authorized</h3>
+
+{% endif %}
+
+
+
+
+{% endblock content %}

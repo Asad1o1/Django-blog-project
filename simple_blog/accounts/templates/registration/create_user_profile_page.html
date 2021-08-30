@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create new profile
+{% endblock title %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<h1>Crate Profile.</h1>
+<div class="form-group">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Create" class="btn btn-primary">
+    </form>
+</div>
+
+{% else %}
+<strong>
+    <h1>Please Log-In To Add Post</h1>
+</strong>
+{% endif %}
+
+
+
+
+{% endblock content %}

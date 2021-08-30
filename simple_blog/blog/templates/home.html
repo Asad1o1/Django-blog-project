@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Post</h1>
+
+{% for post in object_list %}
+<div class="card mb-3">
+
+    <div class="row g-0">
+
+        <div class="col-md-2">
+            {% if post.header_image %}
+            <img src="{{ post.header_image.url }}" class="img-fluid rounded-start" alt="Cant find image">
+            {% elif post.category == "coding" %}
+            <img src="{% static 'blog/images/default-coding.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% elif post.category == "entertainment" %}
+            <img src="{% static 'blog/images/default-entertainment.png' %}" class="img-fluid rounded-start" alt="...">
+            {% elif post.category == "sports" %}
+            <img src="{% static 'blog/images/default-sports.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% elif post.category == "hiking" %}
+            <img src="{% static 'blog/images/default-hiking.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% elif post.category == "Motorcycles" %}
+            <img src="{% static 'blog/images/default-motorcycles.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% elif post.category == "Coding Tutorial" %}
+            <img src="{% static 'blog/images/default-tutorial.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% else %}
+            <img src="{% static 'blog/images/default-blog-card.jpg' %}" class="img-fluid rounded-start" alt="...">
+            {% endif %}
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                        <small>
+                            <a href="{% url 'edit_post' post.pk %}">
+                                <span class="material-icons">
+                                    edit_note
+                                </span>
+                            </a>
+                            <a href="{% url 'delete_post' post.pk %}">
+                                <span class="material-icons">
+                                    delete_forever
+                                </span>
+                            </a>
+                        </small>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></h5>
+                <p class="card-text">{{ post.body | slice:"200" | safe }}</p>
+                <p class="card-text">
+                    <small class="text-muted">Published By: {{ post.author.first_name }}
+                        {{post.author.last_name}}<br>Published Date: {{ post.published }}<br>
+                        Category: <a href="{% url 'category' post.category %}">{{ post.category }}</a>
+                    </small>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endfor %}
+
+{% endblock content %}
